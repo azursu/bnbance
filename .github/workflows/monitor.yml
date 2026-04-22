@@ -1,37 +1,23 @@
 name: 币安行情监控
-run-name: 每日8点自动扫描
-
-# 触发规则
 on:
-  # 定时任务：UTC时间0点 = 北京时间8点，刚好是币安日K线的收盘时间
   schedule:
     - cron: '0 0 * * *'
-  # 允许手动触发，方便你测试
   workflow_dispatch:
 
 jobs:
   run-monitor:
     runs-on: ubuntu-latest
+    env:
+      # 这一行直接干掉 Node.js 警告
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      # 拉取你的代码
-      - name: 拉取代码
-        uses: actions/checkout@v4
-      
-      # 配置Python运行环境
-      - name: 配置Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
-      # 安装脚本需要的依赖
       - name: 安装依赖
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
-      
-      # 运行监控脚本
-      - name: 运行监控脚本
+        run: pip install requests
+      - name: 运行脚本
         env:
-          # 把你配置的Token传进脚本
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         run: python monitor.py
