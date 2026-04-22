@@ -1,28 +1,15 @@
 import requests
 import os
 
-# 打印日志，帮你找错误
-print("=== 脚本开始运行 ===")
+# 测试推送：直接发微信消息
 token = os.getenv("PUSHPLUS_TOKEN")
-print(f"获取到的Token: {token}")
 
-if not token:
-    print("❌ 错误：没有配置 PUSHPLUS_TOKEN !!!")
-    exit(1)
+print("正在发送测试消息...")
+data = {
+    "token": token,
+    "title": "✅ 测试成功！",
+    "content": "你的币安行情监控配置正常！每天8点会自动扫描，出现信号会第一时间提醒你！"
+}
 
-print("✅ Token 配置正常")
-
-# 测试推送
-try:
-    data = {
-        "token": token,
-        "title": "测试通知",
-        "content": "监控脚本运行成功！"
-    }
-    requests.post("https://www.pushplus.plus/send", json=data)
-    print("✅ 微信推送测试成功")
-except Exception as e:
-    print(f"❌ 推送失败: {e}")
-    exit(1)
-
-print("=== 脚本运行完毕 ===")
+requests.post("https://www.pushplus.plus/send", json=data)
+print("测试消息已发送！请查看微信！")
